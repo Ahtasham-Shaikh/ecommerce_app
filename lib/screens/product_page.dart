@@ -1,5 +1,6 @@
 import 'package:a_commerce/constants.dart';
 import 'package:a_commerce/services/firebase_services.dart';
+import 'package:a_commerce/tabs/saved_tab.dart';
 import 'package:a_commerce/widgets/custom_action_bar.dart';
 import 'package:a_commerce/widgets/image_swipe.dart';
 import 'package:a_commerce/widgets/product_size.dart';
@@ -25,12 +26,33 @@ class _ProductPageState extends State<ProductPage> {
         .set({"size": _selectedProductSize});
   }
 
-  Future _addToSaved() {
+  Future _addToSaved() async {
+    final doc = await _firebaseServices.usersRef
+        .doc(_firebaseServices.getUserId())
+        .collection("Saved")
+        .doc(widget.productId)
+        .get();
+    print(doc.exists);
+    if (!doc.exists) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Product saved"),
+        duration: Duration(seconds: 1),
+      ));
+      return _firebaseServices.usersRef
+          .doc(_firebaseServices.getUserId())
+          .collection("Saved")
+          .doc(widget.productId)
+          .set({"size": _selectedProductSize});
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Product removed from saved list"),
+      duration: Duration(seconds: 1),
+    ));
     return _firebaseServices.usersRef
         .doc(_firebaseServices.getUserId())
         .collection("Saved")
         .doc(widget.productId)
-        .set({"size": _selectedProductSize});
+        .delete();
   }
 
   final SnackBar _snackBar = SnackBar(
@@ -134,11 +156,6 @@ class _ProductPageState extends State<ProductPage> {
                             GestureDetector(
                               onTap: () async {
                                 await _addToSaved();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Product Saved"),
-                                  ),
-                                );
                               },
                               child: Container(
                                 width: 65.0,
