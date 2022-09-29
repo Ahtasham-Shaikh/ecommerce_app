@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SavedTab extends StatelessWidget {
-
   final FirebaseServices _firebaseServices = FirebaseServices();
 
   @override
@@ -104,7 +103,7 @@ class SavedTab extends StatelessWidget {
                                             vertical: 4.0,
                                           ),
                                           child: Text(
-                                            "\$${_productMap['price']}",
+                                            "\₹${_productMap['price']}",
                                             style: TextStyle(
                                                 fontSize: 16.0,
                                                 color: Theme.of(context)
@@ -127,11 +126,7 @@ class SavedTab extends StatelessWidget {
                             );
                           }
 
-                          return Container(
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
+                          return Container();
                         },
                       ),
                     );
@@ -146,10 +141,6 @@ class SavedTab extends StatelessWidget {
                 ),
               );
             },
-          ),
-          CustomActionBar(
-            title: "Saved",
-            hasBackArrrow: false,
           ),
         ],
       ),

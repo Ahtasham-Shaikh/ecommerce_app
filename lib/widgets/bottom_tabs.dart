@@ -11,7 +11,6 @@ class BottomTabs extends StatefulWidget {
 }
 
 class _BottomTabsState extends State<BottomTabs> {
-
   int _selectedTab = 0;
 
   @override
@@ -22,16 +21,14 @@ class _BottomTabsState extends State<BottomTabs> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12.0),
-          topRight: Radius.circular(12.0)
-        ),
+            topLeft: Radius.circular(12.0), topRight: Radius.circular(12.0)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             spreadRadius: 1.0,
             blurRadius: 30.0,
           )
-        ]
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -51,15 +48,22 @@ class _BottomTabsState extends State<BottomTabs> {
             },
           ),
           BottomTabBtn(
-            imagePath: "assets/images/tab_saved.png",
+            imagePath: "assets/images/book_icon.png",
             selected: _selectedTab == 2 ? true : false,
             onPressed: () {
               widget.tabPressed(2);
             },
           ),
           BottomTabBtn(
-            imagePath: "assets/images/tab_logout.png",
+            imagePath: "assets/images/tab_saved.png",
             selected: _selectedTab == 3 ? true : false,
+            onPressed: () {
+              widget.tabPressed(3);
+            },
+          ),
+          BottomTabBtn(
+            imagePath: "assets/images/tab_logout.png",
+            selected: _selectedTab == 4 ? true : false,
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
@@ -88,17 +92,13 @@ class BottomTabBtn extends StatelessWidget {
           horizontal: 24.0,
         ),
         decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: _selected ? Theme.of(context).accentColor : Colors.transparent,
-              width: 2.0,
-            )
-          )
-        ),
+            border: Border(
+                top: BorderSide(
+          color: _selected ? Theme.of(context).accentColor : Colors.transparent,
+          width: 2.0,
+        ))),
         child: Image(
-          image: AssetImage(
-            imagePath ?? "assets/images/tab_home.png"
-          ),
+          image: AssetImage(imagePath ?? "assets/images/tab_home.png"),
           width: 22.0,
           height: 22.0,
           color: _selected ? Theme.of(context).accentColor : Colors.black,
@@ -107,4 +107,3 @@ class BottomTabBtn extends StatelessWidget {
     );
   }
 }
-

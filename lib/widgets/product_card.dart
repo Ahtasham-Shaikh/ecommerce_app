@@ -16,12 +16,13 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProductPage(
-                productId: productId,
-              ),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(
+              productId: productId,
+            ),
+          ),
+        );
       },
       child: Container(
         decoration: BoxDecoration(
@@ -49,16 +50,18 @@ class ProductCard extends StatelessWidget {
               left: 0,
               right: 0,
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                padding: const EdgeInsets.only(
+                    bottom: 24, left: 24, right: 8, top: 24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       title,
                       style: TextStyle(
                         fontSize: 20.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                     Text(

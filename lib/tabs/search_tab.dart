@@ -31,9 +31,11 @@ class _SearchTabState extends State<SearchTab> {
           else
             FutureBuilder<QuerySnapshot>(
               future: _firebaseServices.productsRef
-                  .orderBy("search_string")
-                  .startAt([_searchString]).endAt(
-                      ["$_searchString\uf8ff"]).get(),
+                  .where("name", isEqualTo: "Blue Shirt")
+                  .get(),
+              // .orderBy(_searchString)
+              // .startAt([_searchString]).endAt(
+              //     ["$_searchString\uf8ff"]).get(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Scaffold(
@@ -45,6 +47,7 @@ class _SearchTabState extends State<SearchTab> {
 
                 // Collection Data ready to display
                 if (snapshot.connectionState == ConnectionState.done) {
+                  print(snapshot.data.size);
                   // Display the data inside a list view
                   return ListView(
                     padding: EdgeInsets.only(
@@ -55,7 +58,7 @@ class _SearchTabState extends State<SearchTab> {
                       return ProductCard(
                         title: document.data()['name'],
                         imageUrl: document.data()['images'][0],
-                        price: "\$${document.data()['price']}",
+                        price: "\₹${document.data()['price']}",
                         productId: document.id,
                       );
                     }).toList(),
@@ -76,7 +79,7 @@ class _SearchTabState extends State<SearchTab> {
             ),
             child: CustomInput(
               hintText: "Search here...",
-              onSubmitted: (value) {
+              onChanged: (value) {
                 setState(() {
                   _searchString = value.toLowerCase();
                 });

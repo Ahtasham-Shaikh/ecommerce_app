@@ -35,7 +35,7 @@ class HomeTab extends StatelessWidget {
                     return ProductCard(
                       title: document.data()['name'],
                       imageUrl: document.data()['images'][0],
-                      price: "\$${document.data()['price']}",
+                      price: "₹${document.data()['price']}",
                       productId: document.id,
                     );
                   }).toList(),

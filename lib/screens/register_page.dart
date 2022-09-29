@@ -10,9 +10,14 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   // Build an alert dialog to display some errors.
   Future<void> _alertDialogBuilder(String error) async {
+    String msg = "";
+    if (error.toString().contains("empty")) {
+      msg = "Fill all the details";
+    } else if (error.toString().contains("invalid")) {
+      msg = "Email and password don't match";
+    }
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -20,10 +25,10 @@ class _RegisterPageState extends State<RegisterPage> {
           return AlertDialog(
             title: Text("Error"),
             content: Container(
-              child: Text(error),
+              child: Text(msg),
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text("Close Dialog"),
                 onPressed: () {
                   Navigator.pop(context);
@@ -31,8 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
               )
             ],
           );
-        }
-    );
+        });
   }
 
   // Create a new user account
@@ -41,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _registerEmail, password: _registerPassword);
       return null;
-    } on FirebaseAuthException catch(e) {
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
@@ -63,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String _createAccountFeedback = await _createAccount();
 
     // If the string is not null, we got error while create account.
-    if(_createAccountFeedback != null) {
+    if (_createAccountFeedback != null) {
       _alertDialogBuilder(_createAccountFeedback);
 
       // Set the form to regular state [not loading].
