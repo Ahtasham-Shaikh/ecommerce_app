@@ -11,6 +11,14 @@ class SearchTab extends StatefulWidget {
 }
 
 class _SearchTabState extends State<SearchTab> {
+  String capitalize(String string) {
+    if (string.isEmpty) {
+      return string;
+    }
+
+    return string[0].toUpperCase() + string.substring(1);
+  }
+
   FirebaseServices _firebaseServices = FirebaseServices();
   String _searchString = "";
 
@@ -31,12 +39,16 @@ class _SearchTabState extends State<SearchTab> {
           else
             FutureBuilder<QuerySnapshot>(
               future: _firebaseServices.productsRef
-                  .where("name", isEqualTo: "Blue Shirt")
+                  .where("name",
+                      isGreaterThanOrEqualTo: capitalize(_searchString))
+                  .where("name",
+                      isLessThanOrEqualTo: capitalize(_searchString) + '\uf8ff')
                   .get(),
               // .orderBy(_searchString)
               // .startAt([_searchString]).endAt(
               //     ["$_searchString\uf8ff"]).get(),
               builder: (context, snapshot) {
+                print(_searchString);
                 if (snapshot.hasError) {
                   return Scaffold(
                     body: Center(
@@ -81,7 +93,7 @@ class _SearchTabState extends State<SearchTab> {
               hintText: "Search here...",
               onChanged: (value) {
                 setState(() {
-                  _searchString = value.toLowerCase();
+                  _searchString = value;
                 });
               },
             ),
