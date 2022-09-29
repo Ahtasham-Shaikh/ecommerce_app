@@ -16,9 +16,15 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   FirebaseServices _firebaseServices = FirebaseServices();
   int total = 399;
-
   Razorpay razorpay;
   List cartItemId;
+  get cartDocs async {
+    final docs = await _firebaseServices.usersRef
+        .doc(_firebaseServices.getUserId())
+        .collection("Cart")
+        .get();
+    docs.docs.map((e) => cartItemId.add(e.id));
+  }
 
   @override
   void initState() {
@@ -54,7 +60,7 @@ class _CartPageState extends State<CartPage> {
     bool paymentFlag = false;
     var options = {
       "key": "rzp_test_tEAXYHYyDNbbeE",
-      "amount": total,
+      "amount": total * 100,
       "name": "Ahtasham Shaikh",
       "description": "Payment for your online order",
       "prefill": {"email": "shaikh.ahtasham05263@gmail.com"},
@@ -92,16 +98,18 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  final cartRef = FirebaseServices()
+      .usersRef
+      .doc(FirebaseServices().getUserId())
+      .collection("Cart");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           FutureBuilder<QuerySnapshot>(
-            future: _firebaseServices.usersRef
-                .doc(_firebaseServices.getUserId())
-                .collection("Cart")
-                .get(),
+            future: cartRef.get(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Scaffold(
@@ -154,7 +162,8 @@ class _CartPageState extends State<CartPage> {
                                     horizontal: 24.0,
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
                                         width: 90,
@@ -211,14 +220,24 @@ class _CartPageState extends State<CartPage> {
                                         ),
                                       ),
                                       CupertinoButton(
-                                        padding: EdgeInsets.only(left: 80),
-                                        onPressed: null,
+                                        onPressed: () {
+                                          print(document.id);
+                                          cartRef.doc(document.id).delete();
+                                          print("hello");
+                                          setState(() {});
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  "One Item removed from cart"),
+                                            ),
+                                          );
+                                        },
                                         child: const Icon(
                                           Icons.delete,
-                                          semanticLabel: 'delete',
                                           color: Colors.red,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 );
